@@ -8,6 +8,7 @@ A Spring Boot application that provides city information and intelligent city na
 - **Location-Aware Scoring**: Results are scored based on text match and geographic proximity
 - **Case-Insensitive Search**: Search works regardless of text case
 - **Smart Matching**: Supports exact, prefix, and partial matches with different scoring weights
+- **Swagger UI**: Interactive API documentation and testing interface
 
 ## Getting Started
 
@@ -39,7 +40,22 @@ cd cities
 
 The application will start on `http://localhost:8080`
 
-## API Documentation
+### API Documentation
+
+Access the Swagger UI at:
+
+```
+http://localhost:8080/swagger-ui.html
+```
+
+The Swagger UI provides:
+
+- Interactive API documentation
+- Try-it-out functionality for testing endpoints
+- Detailed parameter descriptions
+- Example requests and responses
+
+## API Endpoints
 
 ### Get City Suggestions
 
