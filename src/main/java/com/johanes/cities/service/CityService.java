@@ -1,14 +1,15 @@
 package com.johanes.cities.service;
 
-import com.johanes.cities.model.City;
-import com.johanes.cities.model.Suggestion;
-import com.johanes.cities.repository.CityRepository;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.apache.commons.text.similarity.JaroWinklerSimilarity;
+import org.springframework.stereotype.Service;
+
+import com.johanes.cities.model.City;
+import com.johanes.cities.model.Suggestion;
+import com.johanes.cities.repository.CityRepository;
 
 @Service
 public class CityService {
@@ -16,8 +17,10 @@ public class CityService {
     private static final double NAME_MATCH_WEIGHT = 0.7;
     private static final double LOCATION_MATCH_WEIGHT = 0.3;
     private static final double MAX_DISTANCE_KM = 1000.0;
+    private static final double FUZZY_MATCH_THRESHOLD = 0.8;
 
     private final CityRepository cityRepository;
+    private final JaroWinklerSimilarity similarity = new JaroWinklerSimilarity();
 
     public CityService(CityRepository cityRepository) {
         this.cityRepository = cityRepository;
@@ -33,8 +36,19 @@ public class CityService {
 
     private boolean matchesSearchTerm(City city, String searchTerm) {
         String normalizedSearchTerm = searchTerm.toLowerCase();
-        return city.getName().toLowerCase().contains(normalizedSearchTerm) ||
-                city.getAscii().toLowerCase().contains(normalizedSearchTerm);
+        String cityName = city.getName().toLowerCase();
+        String cityAscii = city.getAscii().toLowerCase();
+
+        // Exact or partial match
+        if (cityName.contains(normalizedSearchTerm) || cityAscii.contains(normalizedSearchTerm)) {
+            return true;
+        }
+
+        // Fuzzy match using Jaro-Winkler
+        double nameSimilarity = similarity.apply(cityName, normalizedSearchTerm);
+        double asciiSimilarity = similarity.apply(cityAscii, normalizedSearchTerm);
+
+        return nameSimilarity >= FUZZY_MATCH_THRESHOLD || asciiSimilarity >= FUZZY_MATCH_THRESHOLD;
     }
 
     private Suggestion createSuggestion(City city, String searchTerm, Double userLatitude, Double userLongitude) {
@@ -63,13 +77,22 @@ public class CityService {
         String cityName = city.getName().toLowerCase();
         String normalizedSearchTerm = searchTerm.toLowerCase();
 
+        // Exact match
         if (cityName.equals(normalizedSearchTerm))
             return 1.0;
+
+        // Partial match
         if (cityName.startsWith(normalizedSearchTerm))
             return 0.9;
         if (cityName.contains(normalizedSearchTerm))
             return 0.8;
-        return 0.5;
+
+        // Fuzzy match score
+        double nameSimilarity = similarity.apply(cityName, normalizedSearchTerm);
+        double asciiSimilarity = similarity.apply(city.getAscii().toLowerCase(), normalizedSearchTerm);
+        double fuzzyScore = Math.max(nameSimilarity, asciiSimilarity);
+
+        return fuzzyScore >= FUZZY_MATCH_THRESHOLD ? fuzzyScore : 0.5;
     }
 
     private double calculateLocationMatchScore(City city, Double userLatitude, Double userLongitude) {
