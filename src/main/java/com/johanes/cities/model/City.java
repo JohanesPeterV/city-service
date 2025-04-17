@@ -1,4 +1,4 @@
-package com.johanes.suggestions.model;
+package com.johanes.cities.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

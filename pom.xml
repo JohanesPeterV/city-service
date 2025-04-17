@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.johanes</groupId>
-	<artifactId>suggestions</artifactId>
+	<artifactId>cities</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>suggestions</name>
-	<description>City Suggestions Autocomplete API</description>
+	<name>cities</name>
+	<description>City Management and Suggestions API</description>
 	<url/>
 	<licenses>
 		<license/>

@@ -1,7 +1,7 @@
-package com.johanes.suggestions.service;
+package com.johanes.cities.service;
 
-import com.johanes.suggestions.model.City;
-import com.johanes.suggestions.model.Suggestion;
+import com.johanes.cities.model.City;
+import com.johanes.cities.model.Suggestion;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 

@@ -1,17 +1,17 @@
-package com.johanes.suggestions.controller;
+package com.johanes.cities.controller;
 
-import com.johanes.suggestions.model.SuggestionResponse;
-import com.johanes.suggestions.service.CityService;
+import com.johanes.cities.model.SuggestionResponse;
+import com.johanes.cities.service.CityService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class CitySuggestionController {
+public class CityController {
 
     private final CityService cityService;
 
-    public CitySuggestionController(CityService cityService) {
+    public CityController(CityService cityService) {
         this.cityService = cityService;
     }
 
