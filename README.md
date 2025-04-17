@@ -11,6 +11,34 @@ A Spring Boot application that provides city information and intelligent city na
 - **Swagger UI**: Interactive API documentation and testing interface
 - **Fuzzy Search**: Intelligent matching that handles typos and misspellings (e.g., "Londn" → "London", "Tornto" → "Toronto")
 
+## Live Demo
+
+The API is deployed on Heroku and can be accessed at:
+
+```
+https://city-service-372784ecbcb6.herokuapp.com
+```
+
+### Example API Calls
+
+1. Basic search:
+
+```
+https://city-service-372784ecbcb6.herokuapp.com/suggestions?q=toronto
+```
+
+2. Search with location:
+
+```
+https://city-service-372784ecbcb6.herokuapp.com/suggestions?q=toronto&latitude=43.70011&longitude=-79.4163
+```
+
+3. Partial name search:
+
+```
+https://city-service-372784ecbcb6.herokuapp.com/suggestions?q=tor
+```
+
 ## Getting Started
 
 ### Prerequisites
@@ -18,7 +46,7 @@ A Spring Boot application that provides city information and intelligent city na
 - Java 17 or higher
 - Maven 3.6 or higher
 
-### Installation
+### Local Development
 
 1. Clone the repository:
 
@@ -96,24 +124,17 @@ The scoring algorithm considers:
 - Contains match: 0.8
 - Location proximity (when coordinates provided): Affects final score based on distance
 
-#### Example Requests
+## Rate Limiting
 
-1. Basic search:
+The API implements rate limiting to ensure fair usage and prevent abuse. The current limits are:
 
-```bash
-curl "http://localhost:8080/suggestions?q=toronto"
-```
+- 100 requests per minute per IP address
+- Requests exceeding the limit will receive a 429 (Too Many Requests) status code
 
-2. Search with location:
-
-```bash
-curl "http://localhost:8080/suggestions?q=toronto&latitude=43.70011&longitude=-79.4163"
-```
-
-3. Partial name search:
+You can test the rate limiter by making multiple requests in quick succession:
 
 ```bash
-curl "http://localhost:8080/suggestions?q=tor"
+for i in {1..110}; do echo "Request #$i"; curl -s -w "\nStatus: %{http_code}\n" "http://localhost:8080/suggestions?q=toronto"; echo "-------------------"; done
 ```
 
 ## Data Source
@@ -142,3 +163,30 @@ Key components:
 - `CityService`: Core business logic and city matching
 - `City`: Data model for city information
 - `Suggestion`: Data model for city suggestions with scoring
+
+## Deployment
+
+The application is deployed on Heroku. The deployment process includes:
+
+1. Automatic build and deployment from the main branch
+2. Environment configuration for production
+3. Proper scaling and monitoring setup
+
+## Potential Improvements
+
+While the current implementation satisfies the core requirements effectively, there are several potential improvements that could be added as the application evolves:
+
+- Caching for frequently searched terms
+- Enhanced logging and monitoring
+- Alternative city names support
+- Population-based scoring adjustments
+
+These improvements can be considered based on actual usage patterns and specific needs that arise. For now there is no need yet for that.
+
+## Contributing
+
+Feel free to submit issues and enhancement requests.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.

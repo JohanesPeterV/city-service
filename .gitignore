@@ -38,3 +38,6 @@ build/
 
 ### Case is stored here, no need to clutter repo with this ###
 .case/
+
+### macOS ###
+.DS_Store
