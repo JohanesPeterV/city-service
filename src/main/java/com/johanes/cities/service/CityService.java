@@ -2,14 +2,10 @@ package com.johanes.cities.service;
 
 import com.johanes.cities.model.City;
 import com.johanes.cities.model.Suggestion;
-import jakarta.annotation.PostConstruct;
+import com.johanes.cities.repository.CityRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,37 +17,14 @@ public class CityService {
     private static final double LOCATION_MATCH_WEIGHT = 0.3;
     private static final double MAX_DISTANCE_KM = 1000.0;
 
-    private List<City> cities = new ArrayList<>();
+    private final CityRepository cityRepository;
 
-    @PostConstruct
-    public void loadCities() throws IOException {
-        try (BufferedReader cityDataReader = Files.newBufferedReader(Paths.get("data/cities_canada-usa.tsv"))) {
-            cityDataReader.readLine(); // Skip header
-
-            String cityRecord;
-            while ((cityRecord = cityDataReader.readLine()) != null) {
-                String[] cityFields = cityRecord.split("\t");
-                if (cityFields.length >= 7) {
-                    cities.add(createCityFromFields(cityFields));
-                }
-            }
-        }
-    }
-
-    private City createCityFromFields(String[] fields) {
-        String name = fields[1];
-        String ascii = fields[2];
-        double latitude = Double.parseDouble(fields[4]);
-        double longitude = Double.parseDouble(fields[5]);
-        String country = fields[8];
-        String admin1 = fields[10];
-        long population = Long.parseLong(fields[14]);
-
-        return new City(name, ascii, latitude, longitude, country, admin1, population);
+    public CityService(CityRepository cityRepository) {
+        this.cityRepository = cityRepository;
     }
 
     public List<Suggestion> findSuggestions(String searchTerm, Double userLatitude, Double userLongitude) {
-        return cities.stream()
+        return cityRepository.findAll().stream()
                 .filter(city -> matchesSearchTerm(city, searchTerm))
                 .map(city -> createSuggestion(city, searchTerm, userLatitude, userLongitude))
                 .sorted(Comparator.comparing(Suggestion::getScore).reversed())
