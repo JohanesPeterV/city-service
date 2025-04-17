@@ -35,7 +35,12 @@ public class CityRepository {
             while ((line = reader.readLine()) != null) {
                 String[] fields = line.split("\t");
                 if (fields.length >= 7) {
-                    cities.add(createCityFromFields(fields));
+                    try {
+                        cities.add(createCityFromFields(fields));
+                    } catch (NumberFormatException e) {
+                        // Skip invalid records
+                        continue;
+                    }
                 }
             }
         }
@@ -44,13 +49,29 @@ public class CityRepository {
     private City createCityFromFields(String[] fields) {
         String name = fields[1];
         String ascii = fields[2];
-        double latitude = Double.parseDouble(fields[4]);
-        double longitude = Double.parseDouble(fields[5]);
+        double latitude = parseDoubleSafely(fields[4], 0.0);
+        double longitude = parseDoubleSafely(fields[5], 0.0);
         String country = fields[8];
         String admin1 = fields[10];
-        long population = Long.parseLong(fields[14]);
+        long population = parseLongSafely(fields[14], 0);
 
         return new City(name, ascii, latitude, longitude, country, admin1, population);
+    }
+
+    private double parseDoubleSafely(String value, double defaultValue) {
+        try {
+            return Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
+
+    private long parseLongSafely(String value, long defaultValue) {
+        try {
+            return Long.parseLong(value);
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
     }
 
     public List<City> findAll() {

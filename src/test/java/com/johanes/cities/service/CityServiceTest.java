@@ -35,7 +35,6 @@ class CityServiceTest {
     @Test
     void findSuggestions_ReturnsResults() {
         List<Suggestion> results = cityService.findSuggestions("tor", null, null);
-
         assertFalse(results.isEmpty());
         assertEquals("Toronto, 08, CA", results.get(0).getName());
         assertTrue(results.get(0).getScore() > 0);
@@ -51,7 +50,6 @@ class CityServiceTest {
     void findSuggestions_WithLocation_AdjustsScores() {
         List<Suggestion> results = cityService.findSuggestions(
                 "tor", 43.70011, -79.4163); // Toronto coordinates
-
         assertFalse(results.isEmpty());
         assertEquals("Toronto, 08, CA", results.get(0).getName());
         assertTrue(results.get(0).getScore() > 0.5); // Should have high score due to location

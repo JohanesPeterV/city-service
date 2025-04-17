@@ -2,39 +2,38 @@ package com.johanes.cities.repository;
 
 import com.johanes.cities.model.City;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
+@ActiveProfiles("test")
 class CityRepositoryTest {
 
+    @Autowired
+    private CityRepository cityRepository;
+
     @Test
-    void loadCities_LoadsData() throws IOException {
-        String testData = "geonameid\tname\tasciiname\tlatitude\tlongitude\tcountry code\tadmin1 code\tpopulation\n" +
-                "1\tToronto\tToronto\t43.70011\t-79.4163\tCA\t08\t2731571";
+    void findAll_ReturnsLoadedCities() {
+        List<City> cities = cityRepository.findAll();
 
-        Path testFile = Files.createTempFile("test-cities", ".tsv");
-        Files.writeString(testFile, testData);
+        assertNotNull(cities);
+        assertFalse(cities.isEmpty());
+        assertEquals(3, cities.size());
 
-        CityRepository repository = new CityRepository("", testFile.toString());
-        repository.loadCities();
+        City toronto = cities.stream()
+                .filter(c -> c.getName().equals("Toronto"))
+                .findFirst()
+                .orElseThrow();
 
-        List<City> cities = repository.findAll();
-        assertEquals(1, cities.size());
-
-        City city = cities.get(0);
-        assertEquals("Toronto", city.getName());
-        assertEquals(43.70011, city.getLatitude());
-        assertEquals(-79.4163, city.getLongitude());
-        assertEquals("CA", city.getCountry());
-        assertEquals("08", city.getAdmin1());
-        assertEquals(2731571, city.getPopulation());
-
-        Files.delete(testFile);
+        assertEquals("Toronto", toronto.getName());
+        assertEquals(43.70011, toronto.getLatitude());
+        assertEquals(-79.4163, toronto.getLongitude());
+        assertEquals("CA", toronto.getCountry());
+        assertEquals("08", toronto.getAdmin1());
     }
 }

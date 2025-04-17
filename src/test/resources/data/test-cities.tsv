@@ -1,0 +1,4 @@
+geonameid	name	asciiname	alternatenames	latitude	longitude	feature_class	feature_code	country_code	cc2	admin1_code	admin2_code	admin3_code	admin4_code	population	elevation	dem	timezone	modification_date
+1	Toronto	Toronto	Toronto,TO	43.70011	-79.4163	P	PPL	CA		08		0	0	America/Toronto	2024-04-17
+2	Montreal	Montreal	Montreal,MTL	45.50884	-73.58781	P	PPL	CA		10		0	0	America/Montreal	2024-04-17
+3	Vancouver	Vancouver	Vancouver,Van	49.24966	-123.11934	P	PPL	CA		59		0	0	America/Vancouver	2024-04-17 
