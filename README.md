@@ -125,7 +125,3 @@ Key components:
 - `CityService`: Core business logic and city matching
 - `City`: Data model for city information
 - `Suggestion`: Data model for city suggestions with scoring
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
