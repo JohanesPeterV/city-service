@@ -9,6 +9,7 @@ A Spring Boot application that provides city information and intelligent city na
 - **Case-Insensitive Search**: Search works regardless of text case
 - **Smart Matching**: Supports exact, prefix, and partial matches with different scoring weights
 - **Swagger UI**: Interactive API documentation and testing interface
+- **Fuzzy Search**: Intelligent matching that handles typos and misspellings (e.g., "Londn" → "London", "Tornto" → "Toronto")
 
 ## Getting Started
 
