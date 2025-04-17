@@ -34,3 +34,7 @@ build/
 
 ### Cursor ###
 .cursor/
+
+
+### Case is stored here, no need to clutter repo with this ###
+.case/
